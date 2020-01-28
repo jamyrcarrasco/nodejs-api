@@ -24,16 +24,18 @@ const registerValidation = data => {
 
 /// Login validation
 const loginValidation = data => {
-  const loginSchema = {
+  const schema = Joi.object({
     email: Joi.string()
       .min(6)
       .required(),
     password: Joi.string()
       .min(8)
       .required()
-  };
+  });
 
-  return Joi.validate(data, loginSchema);
+  const toReturn = schema.validate(data);
+
+  return toReturn;
 };
 
 module.exports.registerValidation = registerValidation;
