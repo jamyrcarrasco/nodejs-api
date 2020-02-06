@@ -19,6 +19,21 @@ app.use(express.json());
 ////---------ROUTES MIDDLEWARES-------
 app.use("/api/user", authRoute);
 
+app.use((req, rest, next) => {
+  const error = new Error("Not found");
+  error.status = 404;
+  next(error);
+});
+
+app.use((error, req, res, next) => {
+  res.status(error.status || 500);
+  res.json({
+    error: {
+      message: error.message
+    }
+  });
+});
+
 app.listen(3000, () =>
   console.log("Server is Up and Running⚡ listening on port: 3000")
 );

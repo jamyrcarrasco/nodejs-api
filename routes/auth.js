@@ -1,7 +1,9 @@
 const router = require("express").Router();
 const User = require("../models/User");
 const { registerValidation, loginValidation } = require("../validation");
-var bcrypt = require("bcryptjs");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const veryToken = require("./tokenVerification");
 
 router.post("/register", async (req, res) => {
   const { error } = registerValidation(req.body);
@@ -49,6 +51,9 @@ router.post("/login", async (req, res) => {
     emailExist.password
   );
   if (!validPass) return res.status(400).send("Invalid credentials password");
-  res.status(200).status("You're logged in!");
+
+  ////Cheate Token
+  const token = jwt.sign({ _id: emailExist._id }, process.env.TOKEN_SECRET);
+  res.header("auth-token", token).send(token);
 });
 module.exports = router;
